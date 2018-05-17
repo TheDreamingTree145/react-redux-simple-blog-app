@@ -11,20 +11,27 @@ class PostsNew extends Component {
           type="text"
           {...field.input}
         />
-        {field.meta.error}
+        {field.meta.touched ? field.meta.error : ''}
       </div>
     );
   }
 
-// field is an object ... means we want all those properties to be props
+  onSubmit = (values) => {
+    console.log(values)
+  }
+
+// field is an object ...field means we want all those properties to be props
 // for the input
 // Field doesn't know what to show on the screen. It only knows how to
 // interact with the data. Component prop takes in a function that should
 // return JSX. No parentheses as we are just passing a reference to a function
 
+// Redux passes this.props.handleSubmit... We pass in the onSubmit function
+// if everything looks good Redux passes in the values object to our function
   render() {
+    const { handleSubmit } = this.props;
     return (
-      <form>
+      <form onSubmit={handleSubmit(this.onSubmit)}>
         <Field
           label="Title"
           name="title"
@@ -32,7 +39,7 @@ class PostsNew extends Component {
         />
         <Field
           label="Categories"
-          name="Categories"
+          name="categories"
           component={this.renderField}
         />
         <Field
@@ -40,6 +47,7 @@ class PostsNew extends Component {
           name="content"
           component={this.renderField}
         />
+        <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     );
   }
@@ -52,7 +60,7 @@ function validate(values) {
 
   // Validate the inputs from 'values'
   if (!values.title || values.title.length < 3) {
-    error.title = "Title must be at least 3 characters long!";
+    errors.title = "Title must be at least 3 characters long!";
   }
   if (!values.categories) {
     errors.categories = "Enter at least one category!";
